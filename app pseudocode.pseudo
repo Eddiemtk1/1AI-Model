@@ -1,0 +1,39 @@
+START
+
+    IMPORT Streamlit, tensorflow, numpy, pickle
+    LOAD 'sentiment_model.keras'
+    LOAD 'tokenizer.pickle'
+    
+    DISPLAY title 'Amazon Review Sentiment Analyser
+    DISPLAY input box 'Enter an Amazon product reviews to see its sentiment
+    DISPLAY button 'Analyse Sentiment
+
+    IF button 'analyse' is PRESSED THEN
+        GET userinput from input box
+
+        IF userinput is NOT EMPTY THEN
+            CONVERT userinput to lowercase
+            REMOVE HTML tags
+            REMOVE special characters
+            TOKENIZE userinput
+            PAD sequence to length 100
+
+            PASS sequence to LSTM sentiment_model
+            GET predictionarray
+            CHOOSE highest probability  (0, 1, 2)
+
+            IF probability == 0 THEN 
+                DISPLAY 'Negative Sentiment'
+            ELSE IF probability == 1 THEN 
+                DISPLAY 'Neutral Sentiment'
+            ELSE IF probability == 2 THEN 
+                DISPLAY 'Positive sentiment'
+            END IF
+
+            DISPLAY confidence score
+        ELSE 
+            DISPLAY WARNING 'please enter text'
+        END IF
+    END IF
+
+END
